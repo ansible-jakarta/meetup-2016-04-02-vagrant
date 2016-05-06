@@ -79,3 +79,27 @@ We should now be able to connect to our VM uninterrupted.
 ## Example 2
 
 In this example we will create multiple VMs with single Vagrantfile, explore a few more ansible.cfg options, and simplify our inventory file. We'll start example-02 lab with same files we had in example-01 and make few improvements.
+
+First let's change our Vagrantfile, so it starts three VMs instead of one. We will also make our VM creatioin a bit more efficient by using linked clone feature:
+
+    Vagrant.configure(2) do |config|
+      config.vm.provider "virtualbox" do |v|
+        v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
+      end
+
+      config.vm.define :vm1 do |vm1|
+        vm1.vm.box = "ubuntu/trusty64"
+      end
+
+      config.vm.define :vm2 do |vm2|
+        vm2.vm.box = "ubuntu/trusty64"
+      end
+
+      config.vm.define :vm3 do |vm3|
+        vm3.vm.box = "ubuntu/trusty64"
+      end
+    end
+
+We can start all three VMs with the same command:
+
+    vagrant up
