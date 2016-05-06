@@ -56,3 +56,22 @@ Inventory template:
 Sample resulting inventory:
 
     default ansible_ssh_host=127.0.0.1 ansible_ssh_port=2200 ansible_ssh_user='vagrant' ansible_ssh_private_key_file='/Users/sergei/workspace/meetup-2016-04-02-vagrant/example-01/.vagrant/machines/default/virtualbox/private_key'
+
+We can now test our Ansible connectivity by gathering facts from the VM:
+
+    ansible -i inventory -m setup default
+
+The ansible execution might be interrupted and you might see a similar prompt in you command line:
+
+    The authenticity of host '[127.0.0.1]:2200 ([127.0.0.1]:2200)' can't be established.
+    RSA key fingerprint is f7:43:fa:26:9e:2f:33:85:f4:60:a5:8e:f8:bf:8b:b3.
+    Are you sure you want to continue connecting (yes/no)?
+
+This is an SSH security feature, warning you that the host you're about to connect to is unknown and its authenticity cannot be confirmed. Since we likely to create and destroy new VMs all the time, we don't want to save their fingerprints in our known_hosts file. We want Ansible to ignore host key checks for VMs.
+
+An easy way to do so is by creating a local ansible.cfg file like so:
+
+    [defaults]
+    host_key_checking = False
+
+We should now be able to connect to our VM uninterrupted.
