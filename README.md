@@ -103,3 +103,21 @@ First let's change our Vagrantfile, so it starts three VMs instead of one. We wi
 We can start all three VMs with the same command:
 
     vagrant up
+
+Just like we did in example-01, we can list SSH configuration of the VMs and use that information to create new Ansible inventory file for three VMs.
+
+Modify new inventory template:
+
+    vm1 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_user='USER' ansible_ssh_private_key_file='IDENTITYFILE'
+    vm2 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_user='USER' ansible_ssh_private_key_file='IDENTITYFILE'
+    vm3 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_user='USER' ansible_ssh_private_key_file='IDENTITYFILE'
+
+with output of `vagrant ssh-config` command, to get something like this:
+
+    vm1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2200 ansible_ssh_user='vagrant' ansible_ssh_private_key_file='/Users/sergei/workspace/meetup-2016-04-02-vagrant/example-02/.vagrant/machines/vm1/virtualbox/private_key'
+    vm2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2201 ansible_ssh_user='vagrant' ansible_ssh_private_key_file='/Users/sergei/workspace/meetup-2016-04-02-vagrant/example-02/.vagrant/machines/vm2/virtualbox/private_key'
+    vm3 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2202 ansible_ssh_user='vagrant' ansible_ssh_private_key_file='/Users/sergei/workspace/meetup-2016-04-02-vagrant/example-02/.vagrant/machines/vm3/virtualbox/private_key'
+
+We can now connect to all three VMs simultaneously. Confirm it with command:
+
+    ansible -i inventory -m ping all
