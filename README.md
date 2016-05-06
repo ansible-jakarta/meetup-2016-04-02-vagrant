@@ -75,3 +75,7 @@ An easy way to do so is by creating a local ansible.cfg file like so:
     host_key_checking = False
 
 We should now be able to connect to our VM uninterrupted.
+
+## Example 2
+
+In this example we will create multiple VMs with single Vagrantfile, explore a few more ansible.cfg options, and simplify our inventory file. We'll start example-02 lab with same files we had in example-01 and make few improvements.
