@@ -1,0 +1,1 @@
+HOST ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_user='USER' ansible_ssh_private_key_file='IDENTITYFILE'
