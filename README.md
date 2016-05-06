@@ -121,3 +121,21 @@ with output of `vagrant ssh-config` command, to get something like this:
 We can now connect to all three VMs simultaneously. Confirm it with command:
 
     ansible -i inventory -m ping all
+
+Ansible gives us ability to store commonly used defaults in the `ansible.cfg` and ability to have a different configuration file for each working directory. We can use this to:
+
+ 1. Simplify our inventory file by moving `ansible_ssh_user` value into `ansible.cfg` file
+ 2. Reduce amount of typing we do when executing `ansible` or `ansible-playbook` commands
+
+Modify `ansible.cfg` so it looks like this:
+
+    [defaults]
+    inventory = inventory
+    remote_user = vagrant
+    host_key_checking = False
+
+Delete all occurances of `ansible_ssh_user='vagrant'` from the inventory file.
+
+We can stil reach all VMs with Ansible, but without having to specify inventory file in command line:
+
+    ansible -m ping all

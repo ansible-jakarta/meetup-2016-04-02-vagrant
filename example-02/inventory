@@ -1,3 +1,3 @@
-vm1 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_user='USER' ansible_ssh_private_key_file='IDENTITYFILE'
-vm2 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_user='USER' ansible_ssh_private_key_file='IDENTITYFILE'
-vm3 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_user='USER' ansible_ssh_private_key_file='IDENTITYFILE'
+vm1 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_private_key_file='IDENTITYFILE'
+vm2 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_private_key_file='IDENTITYFILE'
+vm3 ansible_ssh_host=HOSTNAME ansible_ssh_port=PORT ansible_ssh_private_key_file='IDENTITYFILE'
