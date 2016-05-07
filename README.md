@@ -139,3 +139,63 @@ Delete all occurances of `ansible_ssh_user='vagrant'` from the inventory file.
 We can stil reach all VMs with Ansible, but without having to specify inventory file in command line:
 
     ansible -m ping all
+
+## Example 3
+
+In this example we will use Vagrant's provisioning capability and integrate it with Ansible.
+
+For more information on how to use Ansible provisioner see these links:
+ - [https://www.vagrantup.com/docs/provisioning/ansible_intro.html]
+ - [https://www.vagrantup.com/docs/provisioning/ansible.html]
+ - [https://www.vagrantup.com/docs/provisioning/ansible_common.html]
+
+Since Vagrant's Ansible provisioner expects a playbook, we'll create a very simple one in `hello.yml`:
+
+    ---
+    - hosts: all
+      tasks:
+        - debug:
+            msg: "Hello World!"
+
+We will also copy our `ansible.cfg` file from example-01 to disable host key checking.
+
+Then we'll modify our single VM Vagrantfile from example-01 to include provisioning section like this:
+
+    Vagrant.configure(2) do |config|
+      config.vm.box = "ubuntu/trusty64"
+
+      config.vm.provision :ansible do |ansible|
+        ansible.playbook = "hello.yml"
+        ansible.verbose = "v"
+      end
+    end
+
+Now run `vagrant up` command and in addition to the usual Vagrant boot infromation you will see something like this:
+
+    PYTHONUNBUFFERED=1 ANSIBLE_FORCE_COLOR=true ANSIBLE_HOST_KEY_CHECKING=false ANSIBLE_SSH_ARGS='-o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -o ControlMaster=auto -o ControlPersist=60s' ansible-playbook --connection=ssh --timeout=30 --limit='default' --inventory-file=/Users/sergei/workspace/meetup-2016-04-02-vagrant/example-03/.vagrant/provisioners/ansible/inventory -v hello.yml
+    Using /Users/sergei/workspace/meetup-2016-04-02-vagrant/example-03/ansible.cfg as config file
+
+    PLAY [all] *********************************************************************
+
+    TASK [setup] *******************************************************************
+    ok: [default]
+
+    TASK [debug] *******************************************************************
+    ok: [default] => {
+        "msg": "Hello World!"
+    }
+
+    PLAY RECAP *********************************************************************
+    default                    : ok=2    changed=0    unreachable=0    failed=0
+
+When Vagrant boots VM for the first time, or when you execute command `vagrant provision`, Vagrant will effectively run the following command:
+
+    ansible-playbook --limit 'default' -i .vagrant/provisioners/ansible/inventory -v hello.yml
+
+The advantage of this approach is that we didn't have to manually create our own inventory, Vagrant creates and updates one dynamically. Plus we can now provision whatever software we want onto the VM with Ansible as part of VM creation.
+
+We can still run ad-hoc commands or other playbooks, similar to the way we did in previous examples, but now using using Vagrant provided inventory `.vagrant/provisioners/ansible/inventory`.
+
+Try it out by gathering facts from the VM with this command:
+
+    ansible -i .vagrant/provisioners/ansible/inventory -m setup default
